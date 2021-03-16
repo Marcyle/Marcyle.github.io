@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/avatar/favicon.ico">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Ansible 语法总结 - 徐永强的博客 | Marcyle
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/article/Ansible-语法总结/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article/background4.jpg')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/BeanTechSign-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Ansible" title="Ansible">Ansible</a>
+                            
+                        </div>
+                        <h1>Ansible 语法总结</h1>
+                        <h2 class="subheading">Ansible常用语法汇总</h2>
+                        <span class="meta">
+                            Posted by Marcyle on
+                            2021-03-16
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">微尘</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="变量">变量</h3>
+<h4 id="变量定义">变量定义</h4>
+<ul>
+<li>普通变量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook release.yml --extra-vars <span class="string">"version=1.23.45 other_variable=foo"</span>                 <span class="comment"># 键值对格式</span></span><br><span class="line">ansible-playbook release.yml --extra-vars <span class="string">'&#123;"version":"1.23.45","other_variable":"foo"&#125;'</span>       <span class="comment"># json格式</span></span><br></pre></td></tr></table></figure>
+<p>在playbook中定义变量</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">all</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    favcolor:</span> <span class="string">blue</span></span><br><span class="line"><span class="attr">  vars_files:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">/vars/external_vars.yml</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>注册变量</li>
+</ul>
+<p>使用register注册变量</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">web_servers</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">     - shell:</span> <span class="string">/usr/bin/foo</span></span><br><span class="line"><span class="attr">       register:</span> <span class="string">foo_result</span></span><br><span class="line"><span class="attr">       ignore_errors:</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>使用set_fact注册变量</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Setting</span> <span class="string">host</span> <span class="string">facts</span> <span class="string">using</span> <span class="string">complex</span> <span class="string">arguments</span></span><br><span class="line"><span class="attr">  set_fact:</span></span><br><span class="line"><span class="attr">    one_fact:</span> <span class="string">something</span></span><br><span class="line"><span class="attr">    other_fact:</span> <span class="string">"<span class="template-variable">&#123;&#123; local_var * 2 &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    another_fact:</span> <span class="string">"<span class="template-variable">&#123;&#123; some_registered_var.results | map(attribute='ansible_facts.some_fact') | list &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>共享变量</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line"><span class="attr">    app1:</span></span><br><span class="line"><span class="attr">        jvm:</span> <span class="meta">&amp;jvm_opts</span></span><br><span class="line"><span class="attr">            opts:</span> <span class="string">'-Xms1G -Xmx2G'</span></span><br><span class="line"><span class="attr">            port:</span> <span class="number">1000</span></span><br><span class="line"><span class="attr">            path:</span> <span class="string">/usr/lib/app1</span></span><br><span class="line"><span class="attr">    app2:</span></span><br><span class="line"><span class="attr">        jvm:</span></span><br><span class="line">            <span class="string">&lt;&lt;:</span> <span class="meta">*jvm_opts</span></span><br><span class="line"><span class="attr">            path:</span> <span class="string">/usr/lib/app2</span></span><br></pre></td></tr></table></figure>
+<h4 id="变量引用">变量引用</h4>
+<ul>
+<li>命令行引用json或ymal文件变量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ansible-playbook release.yml --extra-vars <span class="string">"@some_file.json"</span></span><br><span class="line">ansible-playbook release.yml --extra-vars <span class="string">"@some_file.yml"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>引用嵌套变量</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"&#123;&#123; ansible_facts["</span>eth0<span class="string">"]["</span>ipv4<span class="string">"]["</span>address<span class="string">"] &#125;&#125;"</span></span><br><span class="line"><span class="string">"&#123;&#123; ansible_facts.eth0.ipv4.address &#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>魔术变量</li>
+</ul>
+<p>最常用的魔术变量是<code>hostvars</code>，<code>groups</code>，<code>group_names</code>，和<code>inventory_hostname</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">for</span> host <span class="keyword">in</span> groups[<span class="string">'servers'</span>] %&#125;</span><br><span class="line">   &#123;&#123; hostvars[host][<span class="string">'ansible_facts'</span>][<span class="string">'eth0'</span>][<span class="string">'ipv4'</span>][<span class="string">'address'</span>] &#125;&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="变量优先级">变量优先级</h4>
+<blockquote>
+<p>从上到下，优先级越高</p>
+</blockquote>
+<ul>
+<li>command line values (for example, -u my_user these are not variables)</li>
+<li>role defaults (defined in role/defaults/main.yml)</li>
+<li>inventory file or script group vars</li>
+<li>inventory group_vars/all</li>
+<li>playbook group_vars/all</li>
+<li>inventory group_vars/*</li>
+<li>playbook group_vars/*</li>
+<li>inventory file or script host vars</li>
+<li>inventory host_vars/*</li>
+<li>playbook host_vars/*</li>
+<li>host facts / cached set_facts</li>
+<li>play vars</li>
+<li>play vars_prompt</li>
+<li>play vars_files</li>
+<li>role vars (defined in role/vars/main.yml)</li>
+<li>block vars (only for tasks in block)</li>
+<li>task vars (only for the task)</li>
+<li>include_vars</li>
+<li>set_facts / registered vars</li>
+<li>role (and include_role) params</li>
+<li>include params</li>
+<li>extra vars (for example, -e “user=my_user”)</li>
+</ul>
+<h3 id="流程控制">流程控制</h3>
+<h4 id="循环">循环</h4>
+<blockquote>
+<p>Ansible提供了两个用于创建循环的关键字：loop和with_ <lookup>。loop是在2.5版本之后提供的，官方建议使用loop。</lookup></p>
+</blockquote>
+<ul>
+<li>loop跟with_X语法对比</li>
+</ul>
+<p>loop相当于with_list，可直接替换</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">with_list</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  with_list:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">one</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">two</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">with_list</span> <span class="bullet">-&gt;</span> <span class="string">loop</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">one</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">two</span></span><br></pre></td></tr></table></figure>
+<p>loop跟with_items</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">with_items</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  with_items:</span> <span class="string">"<span class="template-variable">&#123;&#123; items &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">with_items</span> <span class="bullet">-&gt;</span> <span class="string">loop</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; items|flatten(levels=1) &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<p>loop跟with_dict</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">with_dict</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.key &#125;&#125;</span> - <span class="template-variable">&#123;&#123; item.value &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  with_dict:</span> <span class="string">"<span class="template-variable">&#123;&#123; dictionary &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">with_dict</span> <span class="bullet">-&gt;</span> <span class="string">loop</span> <span class="string">(option</span> <span class="number">1</span><span class="string">)</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.key &#125;&#125;</span> - <span class="template-variable">&#123;&#123; item.value &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; dictionary|dict2items &#125;&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- name:</span> <span class="string">with_dict</span> <span class="bullet">-&gt;</span> <span class="string">loop</span> <span class="string">(option</span> <span class="number">2</span><span class="string">)</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.0 &#125;&#125;</span> - <span class="template-variable">&#123;&#123; item.1 &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; dictionary|dictsort &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>使循环暂停</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Create</span> <span class="string">servers,</span> <span class="string">pause</span> <span class="number">3</span><span class="string">s</span> <span class="string">before</span> <span class="string">creating</span> <span class="string">next</span></span><br><span class="line">  <span class="string">community.digitalocean.digital_ocean:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    state:</span> <span class="string">present</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">server1</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">server2</span></span><br><span class="line"><span class="attr">  loop_control:</span></span><br><span class="line"><span class="attr">    pause:</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用标签控制循环输出</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Create</span> <span class="string">servers</span></span><br><span class="line"><span class="attr">  digital_ocean:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.name &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    state:</span> <span class="string">present</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">server1</span></span><br><span class="line"><span class="attr">      disks:</span> <span class="number">3</span><span class="string">gb</span></span><br><span class="line"><span class="attr">      ram:</span> <span class="number">15</span><span class="string">Gb</span></span><br><span class="line"><span class="attr">      network:</span></span><br><span class="line"><span class="attr">        nic01:</span> <span class="number">100</span><span class="string">Gb</span></span><br><span class="line"><span class="attr">        nic02:</span> <span class="number">10</span><span class="string">Gb</span></span><br><span class="line">        <span class="string">...</span></span><br><span class="line"><span class="attr">  loop_control:</span></span><br><span class="line"><span class="attr">    label:</span> <span class="string">"<span class="template-variable">&#123;&#123; item.name &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>索引</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Count</span> <span class="string">our</span> <span class="string">fruit</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span> with index <span class="template-variable">&#123;&#123; my_idx &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">apple</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">banana</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">pear</span></span><br><span class="line"><span class="attr">  loop_control:</span></span><br><span class="line"><span class="attr">    index_var:</span> <span class="string">my_idx</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>内嵌循环</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># main.yml</span></span><br><span class="line"><span class="attr">- include_tasks:</span> <span class="string">inner.yml</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">1</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">2</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  loop_control:</span></span><br><span class="line"><span class="attr">    loop_var:</span> <span class="string">outer_item</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># inner.yml</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Print</span> <span class="string">outer</span> <span class="string">and</span> <span class="string">inner</span> <span class="string">items</span></span><br><span class="line">  <span class="string">ansible.builtin.debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"outer item=<span class="template-variable">&#123;&#123; outer_item &#125;&#125;</span> inner item=<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">a</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">b</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">c</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>until</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Retry</span> <span class="string">a</span> <span class="string">task</span> <span class="string">until</span> <span class="string">a</span> <span class="string">certain</span> <span class="string">condition</span> <span class="string">is</span> <span class="string">met</span></span><br><span class="line">  <span class="string">ansible.builtin.shell:</span> <span class="string">/usr/bin/foo</span></span><br><span class="line"><span class="attr">  register:</span> <span class="string">result</span></span><br><span class="line"><span class="attr">  until:</span> <span class="string">result.stdout.find("all</span> <span class="string">systems</span> <span class="string">go")</span> <span class="string">!=</span> <span class="bullet">-1</span></span><br><span class="line"><span class="attr">  retries:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">  delay:</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上述示例表示：该任务最多运行5次，每次尝试之间要延迟10秒，匹配到目标字符串则任务成功。</p>
+</blockquote>
+<h4 id="判断">判断</h4>
+<ul>
+<li>when</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">tasks:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">Shut</span> <span class="string">down</span> <span class="string">CentOS</span> <span class="number">6</span> <span class="string">systems</span></span><br><span class="line">    <span class="string">ansible.builtin.command:</span> <span class="string">/sbin/shutdown</span> <span class="bullet">-t</span> <span class="string">now</span></span><br><span class="line"><span class="attr">    when:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ansible_facts['distribution']</span> <span class="string">==</span> <span class="string">"CentOS"</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ansible_facts['distribution_major_version']</span> <span class="string">==</span> <span class="string">"6"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>failed_when 和changed_when</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Place</span> <span class="string">the</span> <span class="string">result</span> <span class="string">of</span> <span class="string">the</span> <span class="string">current</span> <span class="string">item</span> <span class="string">in</span> <span class="string">the</span> <span class="string">variable</span></span><br><span class="line">  <span class="string">ansible.builtin.shell:</span> <span class="string">echo</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  loop:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">one</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">two</span></span><br><span class="line"><span class="attr">  register:</span> <span class="string">echo</span></span><br><span class="line"><span class="attr">  changed_when:</span> <span class="string">echo.stdout</span> <span class="string">!=</span> <span class="string">"one"</span></span><br></pre></td></tr></table></figure>
+<h4 id="错误处理">错误处理</h4>
+<ul>
+<li>rescue</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - block:</span></span><br><span class="line"><span class="attr">      - debug:</span></span><br><span class="line"><span class="attr">          msg:</span> <span class="string">'I execute normally'</span></span><br><span class="line"><span class="attr">      - command:</span> <span class="string">/bin/false</span></span><br><span class="line"><span class="attr">      - debug:</span></span><br><span class="line"><span class="attr">          msg:</span> <span class="string">'I never execute, due to the above task failing'</span></span><br><span class="line"><span class="attr">    rescue:</span></span><br><span class="line"><span class="attr">      - debug:</span></span><br><span class="line"><span class="attr">          msg:</span> <span class="string">'I caught an error'</span></span><br><span class="line"><span class="attr">      - command:</span> <span class="string">/bin/false</span></span><br><span class="line"><span class="attr">      - debug:</span></span><br><span class="line"><span class="attr">          msg:</span> <span class="string">'I also never execute'</span></span><br><span class="line"><span class="attr">    always:</span></span><br><span class="line"><span class="attr">      - debug:</span></span><br><span class="line"><span class="attr">          msg:</span> <span class="string">"This always executes"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>fail、assert</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Check</span> <span class="string">Redis</span> <span class="string">Process</span></span><br><span class="line"><span class="attr">  shell:</span> <span class="string">ps</span> <span class="bullet">-ef|grep</span> <span class="string">redis-server|grep</span> <span class="bullet">-v</span> <span class="string">grep|wc</span> <span class="bullet">-l</span></span><br><span class="line"><span class="attr">  register:</span> <span class="string">p_num</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">standalone,cluster</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Check</span> <span class="string">Redis</span> <span class="string">Directory</span></span><br><span class="line"><span class="attr">  stat:</span></span><br><span class="line"><span class="attr">    path:</span> <span class="string">"/data/app_install/redis_<span class="template-variable">&#123;&#123; port &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">  register:</span> <span class="string">d</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">standalone,cluster</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Judgment</span> <span class="string">Process</span> <span class="string">Exists</span></span><br><span class="line"><span class="attr">  assert:</span></span><br><span class="line"><span class="attr">    that:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">p_num.stdout|int</span> <span class="string">==</span> <span class="number">0</span></span><br><span class="line"><span class="attr">    fail_msg:</span> <span class="string">"Redis is installed and running"</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">standalone,cluster</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Judgment</span> <span class="string">Install</span> <span class="string">Directory</span> <span class="string">Exists</span></span><br><span class="line"><span class="attr">  fail:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"Redis install dir is exists"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">d.stat.isdir</span> <span class="string">is</span> <span class="string">defined</span> <span class="string">and</span> <span class="string">d.stat.isdir</span></span><br><span class="line"><span class="attr">  tags:</span> <span class="string">standalone,cluster</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>ignore_errors</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">command</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">/bin/false</span></span><br><span class="line"><span class="attr">    ignore_errors:</span> <span class="literal">yes</span></span><br></pre></td></tr></table></figure>
+<h4 id="重用">重用</h4>
+<table>
+<thead>
+<tr>
+<th>include_*</th>
+<th>import_*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>动态的，运行时加载</td>
+<td>静态的，运行前加载</td>
+</tr>
+<tr>
+<td>包含include_role、include_tasks、include_vars</td>
+<td>包含import_role、import_tasks、import_playbook</td>
+</tr>
+</tbody>
+</table>
+<h4 id="委派">委派</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">all</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">Gather</span> <span class="string">facts</span> <span class="string">from</span> <span class="string">db</span> <span class="string">servers</span></span><br><span class="line">      <span class="string">ansible.builtin.setup:</span></span><br><span class="line"><span class="attr">      delegate_to:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      delegate_facts:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">      loop:</span> <span class="string">"<span class="template-variable">&#123;&#123; groups['dbservers'] &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">Send</span> <span class="string">summary</span> <span class="string">mail</span></span><br><span class="line"><span class="attr">      local_action:</span></span><br><span class="line"><span class="attr">        module:</span> <span class="string">community.general.mail</span></span><br><span class="line"><span class="attr">        subject:</span> <span class="string">"Summary Mail"</span></span><br><span class="line"><span class="attr">        to:</span> <span class="string">"<span class="template-variable">&#123;&#123; mail_recipient &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">        body:</span> <span class="string">"<span class="template-variable">&#123;&#123; mail_body &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">      run_once:</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>local_action相当于delegate_to: 127.0.0.1</p>
+<h4 id="并发">并发</h4>
+<ul>
+<li>节点并发</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">test</span> <span class="string">play</span></span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">webservers</span></span><br><span class="line"><span class="attr">  serial:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">1</span></span><br><span class="line"><span class="bullet">    -</span> <span class="number">5</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">"20%"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>任务并发</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">tasks:</span></span><br><span class="line"><span class="attr">- command:</span> <span class="string">/path/to/cpu_intensive_command</span></span><br><span class="line"><span class="attr">  throttle:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h4 id="异步">异步</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">all</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">simulate</span> <span class="string">long</span> <span class="string">running</span> <span class="string">op</span> <span class="string">(15</span> <span class="string">sec),</span> <span class="string">wait</span> <span class="string">for</span> <span class="string">up</span> <span class="string">to</span> <span class="number">45</span> <span class="string">sec,</span> <span class="string">poll</span> <span class="string">every</span> <span class="number">5</span> <span class="string">sec</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">/bin/sleep</span> <span class="number">15</span></span><br><span class="line"><span class="attr">    async:</span> <span class="number">45</span></span><br><span class="line"><span class="attr">    poll:</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>async：最大等待时间</p>
+<p>poll：轮询检查时间，如果设置为0则表示不检查结果。</p>
+</blockquote>
+<h4 id="交互">交互</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- hosts:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">  remote_user:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">  vars_prompt:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">user_name</span></span><br><span class="line"><span class="attr">      prompt:</span> <span class="string">Enter</span> <span class="string">Username</span></span><br><span class="line"><span class="attr">      private:</span> <span class="literal">no</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">user_passwd</span></span><br><span class="line"><span class="attr">      prompt:</span> <span class="string">Enter</span> <span class="string">Password</span></span><br><span class="line"><span class="attr">      encrypt:</span> <span class="string">"sha512_crypt"</span></span><br><span class="line"><span class="attr">      confirm:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">create</span> <span class="string">user</span></span><br><span class="line"><span class="attr">      user:</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">"<span class="template-variable">&#123;&#123; user_name &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">        password:</span> <span class="string">"<span class="template-variable">&#123;&#123; user_passwd &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>private：用户输入的值是否可见，当值为yes时，表示不可见，为no时，可见;</p>
+<p>default：设置默认值，当不输入任何值时，使用该默认值;</p>
+<p>encrypt：加密方式；</p>
+</blockquote>
+<blockquote>
+<p>confirm：再次确认;</p>
+</blockquote>
+<h4 id="测试">测试</h4>
+<ul>
+<li>测试字符串</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line"><span class="attr">  url:</span> <span class="string">"http://example.com/users/foo/resources/bar"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"matched pattern 1"</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">url</span> <span class="string">is</span> <span class="string">match("http://example.com/users/.*/resources/")</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"matched pattern 2"</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">url</span> <span class="string">is</span> <span class="string">search("/users/.*/resources/.*")</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"matched pattern 3"</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">url</span> <span class="string">is</span> <span class="string">regex("example.com/\w+/foo")</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>测试路径</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"path is a directory"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">mypath</span> <span class="string">is</span> <span class="string">directory</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"path is a file"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">mypath</span> <span class="string">is</span> <span class="string">file</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"path is a symlink"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">mypath</span> <span class="string">is</span> <span class="string">link</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"path already exists"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">mypath</span> <span class="string">is</span> <span class="string">exists</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>真实性测试</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"Truthy"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">value</span> <span class="string">is</span> <span class="string">truthy(convert_bool=True)</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    value:</span> <span class="string">"yes"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">- debug:</span></span><br><span class="line"><span class="attr">    msg:</span> <span class="string">"Falsy"</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">value</span> <span class="string">is</span> <span class="string">falsy(convert_bool=True)</span></span><br><span class="line"><span class="attr">  vars:</span></span><br><span class="line"><span class="attr">    value:</span> <span class="string">"off"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>版本测试</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line"><span class="attr">    my_version:</span> <span class="number">1.2</span><span class="number">.3</span></span><br><span class="line"></span><br><span class="line"><span class="attr">tasks:</span></span><br><span class="line"><span class="attr">    - debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"my_version is higher than 1.0.0"</span></span><br><span class="line"><span class="attr">      when:</span> <span class="string">my_version</span> <span class="string">is</span> <span class="string">version('1.0.0',</span> <span class="string">'&gt;'</span><span class="string">)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>测试执行结果</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">tasks:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - shell:</span> <span class="string">/usr/bin/foo</span></span><br><span class="line"><span class="attr">    register:</span> <span class="string">result</span></span><br><span class="line"><span class="attr">    ignore_errors:</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"it failed"</span></span><br><span class="line"><span class="attr">    when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">failed</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># in most cases you'll want a handler, but if you want to do something right now, this is nice</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"it changed"</span></span><br><span class="line"><span class="attr">    when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">changed</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"it succeeded in Ansible &gt;= 2.1"</span></span><br><span class="line"><span class="attr">    when:</span> <span class="string">result</span> <span class="string">is</span> <span class="string">succeeded</span></span><br></pre></td></tr></table></figure>
+<h3 id="剧本">剧本</h3>
+<h4 id="创建角色">创建角色</h4>
+<p>首先可以通过ansible galaxy工具方便的创建一个角色目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ansible-galaxy init -p playbooks/roles database</span><br></pre></td></tr></table></figure>
+<ul>
+<li>目录结构</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">playbooks/roles/database</span></span><br><span class="line"><span class="string">├──</span> <span class="string">README.md</span></span><br><span class="line"><span class="string">├──</span> <span class="string">defaults</span></span><br><span class="line"><span class="string">│</span>   <span class="string">└──</span> <span class="string">main.yml</span>           <span class="comment"># 存放默认变量，优先级最低</span></span><br><span class="line"><span class="string">├──</span> <span class="string">files</span></span><br><span class="line"><span class="string">├──</span> <span class="string">handlers</span></span><br><span class="line"><span class="string">│</span>   <span class="string">└──</span> <span class="string">main.yml</span>           <span class="comment"># 定义触发执行的task</span></span><br><span class="line"><span class="string">├──</span> <span class="string">meta</span></span><br><span class="line"><span class="string">│</span>   <span class="string">└──</span> <span class="string">main.yml</span>           <span class="comment"># 定义role依赖</span></span><br><span class="line"><span class="string">├──</span> <span class="string">tasks</span></span><br><span class="line"><span class="string">│</span>   <span class="string">└──</span> <span class="string">main.yml</span>           <span class="comment"># 定义role的主要任务</span></span><br><span class="line"><span class="string">├──</span> <span class="string">templates</span></span><br><span class="line"><span class="string">├──</span> <span class="string">tests</span></span><br><span class="line"><span class="string">│</span>   <span class="string">├──</span> <span class="string">inventory</span></span><br><span class="line"><span class="string">│</span>   <span class="string">└──</span> <span class="string">test.yml</span></span><br><span class="line"><span class="string">└──</span> <span class="string">vars</span></span><br><span class="line">    <span class="string">└──</span> <span class="string">main.yml</span>           <span class="comment"># 存放role所需变量</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>角色依赖</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># roles/myapp/meta/main.yml</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">dependencies:</span></span><br><span class="line"><span class="attr">  - role:</span> <span class="string">common</span></span><br><span class="line"><span class="attr">    vars:</span></span><br><span class="line"><span class="attr">      some_parameter:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  - role:</span> <span class="string">apache</span></span><br><span class="line"><span class="attr">    vars:</span></span><br><span class="line"><span class="attr">      apache_port:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">  - role:</span> <span class="string">postgres</span></span><br><span class="line"><span class="attr">    vars:</span></span><br><span class="line"><span class="attr">      dbname:</span> <span class="string">blarg</span></span><br><span class="line"><span class="attr">      other_parameter:</span> <span class="number">12</span></span><br></pre></td></tr></table></figure>
+<h4 id="创建剧本">创建剧本</h4>
+<blockquote>
+<p>略，见实战项目目录结构</p>
+</blockquote>
+<h4 id="剧本调试">剧本调试</h4>
+<ul>
+<li>常用调试命令</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查语法</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--syntax-check</span> <span class="string">playbook.yml</span> </span><br><span class="line"><span class="comment"># 查看host列表</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--list-hosts</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># 查看task列表</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--list-tasks</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># 检查模式(不会运行)</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--check</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># diff模式(查看文件变化)</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--check</span> <span class="bullet">--diff</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># 从指定的task开始运行</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--start-at-task="install</span> <span class="string">packages"</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># 步进模式，运行前需要你确认</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--step</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># 指定tags</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--tags=foo</span> <span class="string">playbook.yml</span></span><br><span class="line"><span class="comment"># 跳过tags</span></span><br><span class="line"><span class="string">ansible-playbook</span> <span class="bullet">--skip-tags=foo</span> <span class="string">playbook.yml</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>启用调试器</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">Play</span></span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">all</span></span><br><span class="line"><span class="attr">  debugger:</span> <span class="string">never</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">Execute</span> <span class="string">a</span> <span class="string">command</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">"false"</span></span><br><span class="line"><span class="attr">      debugger:</span> <span class="string">on_failed</span></span><br><span class="line"><span class="string">PLAY</span> <span class="string">***************************************************************************</span></span><br><span class="line"></span><br><span class="line"><span class="string">TASK</span> <span class="string">[wrong</span> <span class="string">variable]</span> <span class="string">**********************************************************</span></span><br><span class="line"><span class="attr">fatal:</span> <span class="string">[192.0.2.10]:</span> <span class="string">FAILED!</span> <span class="string">=&gt;</span> <span class="string">&#123;"failed":</span> <span class="literal">true</span><span class="string">,</span> <span class="string">"msg"</span><span class="string">:</span> <span class="string">"ERROR! 'wrong_var' is undefined"</span><span class="string">&#125;</span></span><br><span class="line"><span class="string">Debugger</span> <span class="string">invoked</span></span><br><span class="line"><span class="string">[192.0.2.10]</span> <span class="attr">TASK:</span> <span class="string">wrong</span> <span class="string">variable</span> <span class="string">(debug)&gt;</span> <span class="string">p</span> <span class="string">result._result</span></span><br><span class="line"><span class="string">&#123;'failed':</span> <span class="literal">True</span><span class="string">,</span></span><br><span class="line"><span class="attr"> 'msg':</span> <span class="string">'The task includes an option with an undefined variable. The error '</span></span><br><span class="line">        <span class="string">"was: 'wrong_var' is undefined\n"</span></span><br><span class="line">        <span class="string">'\n'</span></span><br><span class="line">        <span class="string">'The error appears to have been in '</span></span><br><span class="line">        <span class="string">"'playbooks/debugger.yml': line 7, "</span></span><br><span class="line">        <span class="string">'column 7, but may\n'</span></span><br><span class="line">        <span class="string">'be elsewhere in the file depending on the exact syntax problem.\n'</span></span><br><span class="line">        <span class="string">'\n'</span></span><br><span class="line">        <span class="string">'The offending line appears to be:\n'</span></span><br><span class="line">        <span class="string">'\n'</span></span><br><span class="line">        <span class="string">'  tasks:\n'</span></span><br><span class="line">        <span class="string">'    - name: wrong variable\n'</span></span><br><span class="line">        <span class="string">'      ^ here\n'</span><span class="string">&#125;</span></span><br><span class="line"><span class="string">[192.0.2.10]</span> <span class="attr">TASK:</span> <span class="string">wrong</span> <span class="string">variable</span> <span class="string">(debug)&gt;</span> <span class="string">p</span> <span class="string">task.args</span></span><br><span class="line"><span class="string">&#123;u'data':</span> <span class="string">u'&#123;&#123;</span> <span class="string">wrong_var</span> <span class="string">&#125;&#125;'&#125;</span></span><br><span class="line"><span class="string">[192.0.2.10]</span> <span class="attr">TASK:</span> <span class="string">wrong</span> <span class="string">variable</span> <span class="string">(debug)&gt;</span> <span class="string">task.args['data']</span> <span class="string">=</span> <span class="string">'<span class="template-variable">&#123;&#123; var1 &#125;&#125;</span>'</span></span><br><span class="line"><span class="string">[192.0.2.10]</span> <span class="attr">TASK:</span> <span class="string">wrong</span> <span class="string">variable</span> <span class="string">(debug)&gt;</span> <span class="string">p</span> <span class="string">task.args</span></span><br><span class="line"><span class="string">&#123;u'data':</span> <span class="string">'<span class="template-variable">&#123;&#123; var1 &#125;&#125;</span>'</span><span class="string">&#125;</span></span><br><span class="line"><span class="string">[192.0.2.10]</span> <span class="attr">TASK:</span> <span class="string">wrong</span> <span class="string">variable</span> <span class="string">(debug)&gt;</span> <span class="string">redo</span></span><br><span class="line"><span class="attr">ok:</span> <span class="string">[192.0.2.10]</span></span><br><span class="line"></span><br><span class="line"><span class="string">PLAY</span> <span class="string">RECAP</span> <span class="string">*********************************************************************</span></span><br><span class="line"><span class="number">192.0</span><span class="number">.2</span><span class="number">.10</span>               <span class="string">:</span> <span class="string">ok=1</span>    <span class="string">changed=0</span>    <span class="string">unreachable=0</span>    <span class="string">failed=0</span></span><br></pre></td></tr></table></figure>
+<h3 id="过滤器">过滤器</h3>
+<h4 id="时间过滤器">时间过滤器</h4>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Use ansible_date_time.epoch fact</span><br><span class="line">&#123;&#123; '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) &#125;&#125;</span><br><span class="line"></span><br><span class="line"># Use arbitrary epoch value</span><br><span class="line">&#123;&#123; '%Y-%m-%d' | strftime(1441357287) &#125;&#125; # =&gt; 2015-09-04</span><br><span class="line"></span><br><span class="line"># Get remaining seconds after delta has been calculated. NOTE: This does NOT convert years, days, hours, and so on to seconds. For that, use total_seconds()</span><br><span class="line">&#123;&#123; (("2016-08-14 20:00:12" | to_datetime) - ("2016-08-14 18:00:00" | to_datetime)).seconds  &#125;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="字符串过滤器">字符串过滤器</h4>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># 默认值</span><br><span class="line">&#123;&#123; some_variable | default(5) &#125;&#125;</span><br><span class="line"></span><br><span class="line"># convert "foobar" to "bar"</span><br><span class="line">&#123;&#123; 'foobar' | regex_replace('^f.*o(.*)$', '\\1') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># search for "foo" in "foobar"</span><br><span class="line">&#123;&#123; 'foobar' | regex_search('(foo)') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># Return a list of all IPv4 addresses in the string</span><br><span class="line">&#123;&#123; 'Some DNS servers are 8.8.8.8 and 8.8.4.4' | regex_findall('\\b(?:[0-9]&#123;1,3&#125;\\.)&#123;3&#125;[0-9]&#123;1,3&#125;\\b') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># add "https://" prefix to each item in a list</span><br><span class="line">&#123;&#123; hosts | map('regex_replace', '^(.*)$', 'https://\\1') | list &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 生成注释</span><br><span class="line">&#123;&#123; "My Special Case" | comment(decoration="! ") &#125;&#125;</span><br><span class="line"></span><br><span class="line"># '/etc/asdf/foo.txt' ==&gt; 'foo.txt'</span><br><span class="line">&#123;&#123; path | basename &#125;&#125;</span><br><span class="line"></span><br><span class="line"># with path == 'nginx.conf' the return would be 'nginx'</span><br><span class="line">&#123;&#123; path | splitext | first &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 格式化</span><br><span class="line">&#123;&#123; some_variable | to_json &#125;&#125;</span><br><span class="line">&#123;&#123; some_variable | to_yaml &#125;&#125;</span><br><span class="line">&#123;&#123; some_variable | to_nice_json(indent=2) &#125;&#125;</span><br><span class="line">&#123;&#123; some_variable | to_nice_yaml(indent=8) &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 列表字典转换</span><br><span class="line">&#123;&#123; tags | items2dict &#125;&#125;</span><br><span class="line">&#123;&#123; tags | dict2items &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 获取数据类型</span><br><span class="line">&#123;&#123; myvar | type_debug &#125;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="加密校验">加密校验</h4>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># 获取字符串的sha1哈希</span><br><span class="line">&#123;&#123; 'test1' | hash('sha1') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 获取字符串的md5哈希值</span><br><span class="line">&#123;&#123; 'test1' | hash('md5') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 获取字符串校验和</span><br><span class="line">&#123;&#123; 'test2' | checksum &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 获取sha512密码哈希（随机盐）</span><br><span class="line">&#123;&#123; 'passwordsaresecret' | password_hash('sha512') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 获得带有特定盐的sha256密码哈希</span><br><span class="line">&#123;&#123; 'secretpassword' | password_hash('sha256', 'mysecretsalt') &#125;&#125;</span><br><span class="line"></span><br><span class="line"># </span><br><span class="line">&#123;&#123; 'secretpassword' | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) &#125;&#125;</span><br><span class="line"></span><br><span class="line"># 获取随机数</span><br><span class="line">&#123;&#123; 101 | random(1, 10) &#125;&#125;</span><br><span class="line">&#123;&#123; 101 | random(start=1, step=10) &#125;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="查找">查找</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vars:</span></span><br><span class="line"><span class="attr">  motd_value:</span> <span class="string">"<span class="template-variable">&#123;&#123; lookup('file', '/etc/motd') &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">tasks:</span></span><br><span class="line"><span class="attr">  - debug:</span></span><br><span class="line"><span class="attr">      msg:</span> <span class="string">"motd value is <span class="template-variable">&#123;&#123; motd_value &#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<h4 id="自定义过滤器">自定义过滤器</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- hosts:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">Print</span> <span class="string">a</span> <span class="string">message</span></span><br><span class="line"><span class="attr">      debug:</span></span><br><span class="line"><span class="attr">        msg:</span> <span class="string">"<span class="template-variable">&#123;&#123;'test'|a_filter&#125;&#125;</span>"</span></span><br></pre></td></tr></table></figure>
+<p>自定义的filter要放入和playbook同级的filter_plugins目录下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FilterModule</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">filters</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="string">'a_filter'</span>: self.a_filter,</span><br><span class="line">            <span class="string">'another_filter'</span>: self.b_filter</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">a_filter</span><span class="params">(self, a_variable)</span>:</span></span><br><span class="line">        a_new_variable = a_variable + <span class="string">' CREATE NEW FILTER'</span></span><br><span class="line">        <span class="keyword">return</span> a_new_variable</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/PS-总结/" data-toggle="tooltip" data-placement="top" title="PS 总结">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#变量"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x53D8;&#x91CF;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#变量定义"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x53D8;&#x91CF;&#x5B9A;&#x4E49;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#变量引用"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x53D8;&#x91CF;&#x5F15;&#x7528;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#变量优先级"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x53D8;&#x91CF;&#x4F18;&#x5148;&#x7EA7;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#流程控制"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x6D41;&#x7A0B;&#x63A7;&#x5236;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#循环"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">&#x5FAA;&#x73AF;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#判断"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">&#x5224;&#x65AD;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#错误处理"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">&#x9519;&#x8BEF;&#x5904;&#x7406;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#重用"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">&#x91CD;&#x7528;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#委派"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">&#x59D4;&#x6D3E;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#并发"><span class="toc-nav-number">2.6.</span> <span class="toc-nav-text">&#x5E76;&#x53D1;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#异步"><span class="toc-nav-number">2.7.</span> <span class="toc-nav-text">&#x5F02;&#x6B65;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#交互"><span class="toc-nav-number">2.8.</span> <span class="toc-nav-text">&#x4EA4;&#x4E92;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#测试"><span class="toc-nav-number">2.9.</span> <span class="toc-nav-text">&#x6D4B;&#x8BD5;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#剧本"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">&#x5267;&#x672C;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#创建角色"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">&#x521B;&#x5EFA;&#x89D2;&#x8272;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#创建剧本"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">&#x521B;&#x5EFA;&#x5267;&#x672C;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#剧本调试"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">&#x5267;&#x672C;&#x8C03;&#x8BD5;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#过滤器"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">&#x8FC7;&#x6EE4;&#x5668;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#时间过滤器"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">&#x65F6;&#x95F4;&#x8FC7;&#x6EE4;&#x5668;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#字符串过滤器"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">&#x5B57;&#x7B26;&#x4E32;&#x8FC7;&#x6EE4;&#x5668;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#加密校验"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">&#x52A0;&#x5BC6;&#x6821;&#x9A8C;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#查找"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">&#x67E5;&#x627E;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#自定义过滤器"><span class="toc-nav-number">4.5.</span> <span class="toc-nav-text">&#x81EA;&#x5B9A;&#x4E49;&#x8FC7;&#x6EE4;&#x5668;</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Ansible" title="Ansible">Ansible</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://github.com/Marcyle/" target="_blank">Github</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/marcyle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Marcyle 2021 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite.com/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

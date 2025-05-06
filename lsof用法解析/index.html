@@ -121,7 +121,7 @@
 
 <!-- hack iOS CSS :active style -->
 
-	<body ontouchstart="" class="body--light body--dark">
+	<body ontouchstart="" class="body--light body--light">
 
 
 		<!-- ThemeColor -->
@@ -155,7 +155,7 @@
       ? b.pop()
       : '';
   }
-  let themeMode = 'dark';
+  let themeMode = 'light';
   if (getCookieValue('sb-color-mode') && (getCookieValue('sb-color-mode') !== themeMode)) {
     let dbody = document.body.classList;
     themeMode === 'dark' ? dbody.remove('body--dark') : dbody.add('body--dark');
@@ -466,7 +466,7 @@
 <div class="tip">
   <p>
     
-      If you like this blog or find it useful for you, you are welcome to comment on it. You are also welcome to share this blog, so that more people can participate in it. If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+      谢谢观看!
     
   </p>
 </div>
@@ -536,10 +536,6 @@
         <h5>FRIENDS</h5>
         <ul class="list-inline">
 
-          
-          <li>
-            <a href="https://v-vincen.life/" target="_blank">V_Vincen</a>
-          </li>
           
         </ul>
         
